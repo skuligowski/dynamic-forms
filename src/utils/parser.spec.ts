@@ -15,8 +15,8 @@ interface TestGroup {
 
 const tests: TestCase[] = [
     { expr: 'a', cond: { a: true }, res: true },
-    { expr: 'a', cond: { a: false, b:true }, res: false },
-    
+    { expr: 'a', cond: { a: false }, res: false },
+
     { expr: '!a', cond: { a: true }, res: false },
     { expr: '!a', cond: { a: false }, res: true },
 

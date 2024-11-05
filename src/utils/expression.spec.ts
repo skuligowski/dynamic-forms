@@ -44,6 +44,51 @@ const tests: TestCase[] = [
     { expr: '((a="apple" | b="pear") & (c="banana" | d="melon"))', model: { a: 'orange', b: 'pear', c: 'apple', d: 'melon' }, res: true },
     { expr: '((a="apple" | b="orange") & (c="banana" | d="melon"))', model: { a: 'pear', b: 'apple', c: 'grape', d: 'melon' }, res: false },
 
+    // checking if it exists in model and is not empty
+    { expr: 'a="test" & b', model: { a: 'test', b: true }, res: true },
+    { expr: 'a="test" & b', model: { a: 'test', b: 'test' }, res: true },
+    { expr: 'a="test" & b', model: { a: 'test', b: 0 }, res: true },
+    { expr: 'a="test" & b', model: { a: 'test', b: 2 }, res: true },
+
+    // empty values
+    { expr: 'a="test" & b', model: { a: 'test', b: '' }, res: false },
+    { expr: 'a="test" & b', model: { a: 'test', b: null }, res: false },
+    { expr: 'a="test" & b', model: { a: 'test', b: undefined }, res: false },
+    
+    // with negations
+    { expr: 'a!="test"', model: { a: 'test' }, res: false },
+    { expr: 'a!="test"', model: { a: 'pear' }, res: true },
+    { expr: '!(a!="test")', model: { a: 'test' }, res: true },
+    
+    // Mixed AND with = and !=
+    { expr: 'a="apple" & b!="pear"', model: { a: 'apple', b: 'orange' }, res: true },
+    { expr: 'a="apple" & b!="pear"', model: { a: 'apple', b: 'pear' }, res: false },
+    { expr: 'a!="apple" & b="pear"', model: { a: 'grape', b: 'pear' }, res: true },
+    { expr: 'a!="apple" & b="pear"', model: { a: 'apple', b: 'pear' }, res: false },
+
+    // Mixed OR with = and !=
+    { expr: 'a="apple" | b!="pear"', model: { a: 'apple', b: 'pear' }, res: true },
+    { expr: 'a="apple" | b!="pear"', model: { a: 'orange', b: 'pear' }, res: false },
+    { expr: 'a!="apple" | b="pear"', model: { a: 'grape', b: 'pear' }, res: true },
+    { expr: 'a!="apple" | b="pear"', model: { a: 'apple', b: 'orange' }, res: false },
+
+    // Mixed AND and OR with parentheses
+    { expr: '(a="apple" | b!="pear") & c="grape"', model: { a: 'apple', b: 'pear', c: 'grape' }, res: true },
+    { expr: '(a="apple" | b!="pear") & c="grape"', model: { a: 'orange', b: 'pear', c: 'grape' }, res: false },
+    { expr: '(a="apple" & b!="pear") | c="grape"', model: { a: 'apple', b: 'orange', c: 'banana' }, res: true },
+    { expr: '(a="apple" & b!="pear") | c="grape"', model: { a: 'apple', b: 'pear', c: 'grape' }, res: true },
+
+    // Nested parentheses with AND, OR, =, and !=
+    { expr: '((a="apple" | b!="pear") & (c="grape" | d!="melon"))', model: { a: 'apple', b: 'pear', c: 'grape', d: 'melon' }, res: true },
+    { expr: '((a="apple" | b!="pear") & (c="grape" | d!="melon"))', model: { a: 'apple', b: 'pear', c: 'apple', d: 'melon' }, res: false },
+    { expr: '((a!="apple" | b="pear") & (c!="banana" | d="melon"))', model: { a: 'orange', b: 'pear', c: 'grape', d: 'melon' }, res: true },
+    { expr: '((a="apple" & b!="pear") | (c="banana" & d="melon"))', model: { a: 'apple', b: 'orange', c: 'banana', d: 'melon' }, res: true },
+
+    // Complex expressions with mixed = and !=
+    { expr: '(a!="apple" & (b="pear" | c!="grape"))', model: { a: 'grape', b: 'pear', c: 'melon' }, res: true },
+    { expr: '(a!="apple" & (b="pear" | c!="grape"))', model: { a: 'apple', b: 'orange', c: 'grape' }, res: false },
+    { expr: '(a="apple" | (b="pear" & c!="banana"))', model: { a: 'orange', b: 'pear', c: 'grape' }, res: true },
+    { expr: '(a="apple" | (b="orange" & c!="grape"))', model: { a: 'apple', b: 'orange', c: 'grape' }, res: true },
 ];
 
 
