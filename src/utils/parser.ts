@@ -10,9 +10,11 @@ class TreeNode {
   }
 }
 
+
 const tokenize = (expression: string): string[] => {
   const tokens: string[] = [];
   let current = "";
+  
   for (const char of expression.replace(/\s+/g, "")) {
     if (
       char === "(" ||
@@ -117,4 +119,4 @@ const evaluate = (tree: TreeNode, conditions: { [key: string]: boolean }) => {
   return evaluateExpressionTree(tree, conditions);
 };
 
-export { parse, evaluate }; 
+export { parse, evaluate, tokenize, buildExpressionTree, evaluateExpressionTree }; 

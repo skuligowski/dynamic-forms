@@ -1,17 +1,16 @@
 import { evaluate, parse } from "./parser";
 
-
 interface TestCase {
-    expr: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cond: any;
-    res: boolean;
+  expr: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cond: any;
+  res: boolean;
 }
 
 interface TestGroup {
-    expr: string;
-    order: number;
-    tests: TestCase[];
+  expr: string;
+  order: number;
+  tests: TestCase[];
 }
 
 const tests: TestCase[] = [
@@ -99,7 +98,7 @@ describe("parser", () => {
     testGroups[testCase.expr] = group;
     return testGroups;
   }, {} as {[key: string]: TestGroup}))
-  .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.order - b.order);
 
   for (const testGroup of testGroupsSorted) {
     describe(testGroup.expr, () => {
