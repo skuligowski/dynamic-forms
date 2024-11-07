@@ -11,13 +11,20 @@ interface Condition {
   fn: (model: EvaluationModel) => boolean;
 }
 
+type OperatorEval = (model: EvaluationModel, ...variables: string[]) => boolean;
+interface Operator {
+    name: string;
+    evaluate: OperatorEval;
+}
+
 const expression = (
-  expression: string
+  expression: string,
+  operators?: Operator[],
 ): ((model: EvaluationModel) => boolean) => {
   let count = 0;
 
   const conditions: Condition[] = [];
-  const newExpression = expression
+  let newExpression = expression
     .replace(
       /(\w+)(!=|=)(["'])((?:(?!\3)[^\\]|\\.)+)\3/g,
       (_all, variable, operator, _delimiter, value) => {
@@ -41,6 +48,26 @@ const expression = (
       return exprName;
     });
 
+  if (operators && operators.length) {
+    newExpression = operators.reduce((currentExpression, operator) => {
+        return currentExpression.replace(
+            new RegExp(`${operator.name}\\(([^\\(]+)\\)`, 'g'),
+            (_all, variables) => {
+                console.log('-------')
+                console.log(_all);
+                console.log(variables);
+                const exprName = `_${count++}`;
+                conditions.push({
+                    key: exprName,
+                    fn: (model: EvaluationModel) => operator.evaluate(model, ...variables.split(',')),
+                });
+                console.log('-------')
+                return exprName;
+            }
+        )
+    }, newExpression);
+  }
+
   const tokens = tokenize(newExpression);
   const tree = buildExpressionTree(tokens);
   return (model) => {
@@ -55,5 +82,7 @@ const expression = (
     return evaluateExpressionTree(tree, { ...newModel, ...evaluatedConds });
   };
 };
+
+
 
 export { expression };

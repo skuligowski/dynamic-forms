@@ -112,5 +112,12 @@ describe("expression", () => {
         }
     }); 
   }
+
+  it('test operator', () => {
+    expression('hasChanged("test")', [{ name: 'hasChanged', evaluate: (model, variable) => { 
+        console.log(model, variable);
+        return false;
+    } }])({});
+  });
 });
 
