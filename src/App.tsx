@@ -2,41 +2,21 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { expression } from './utils/expression';
 
 function App() {
   const [count, setCount] = useState(0);
 
-  const formMetadata = {
-    "conditions": [
-      { "name": "escalationSelected", "type": "value", "component": "escalateCheckbox", "value": true },
-      { "name": "hasEscalationComment", "type": "notEmpty", "component": "escalationComment" },
-    ],
-    "components": [
-      {
-        "id": "escalateCheckbox",
-        "type": "checkbox",
-        "label": "Yes, I want to escalate",
-        "dependencies": []
-      },
-      {
-        "id": "escalationComment",
-        "type": "textarea",
-        "label": "Escalation comment",
-        "dependencies": [
-          { "type": "enable", "expression": "escalationSelected" }
-        ]
-      },
-      {
-        "id": "escalateAction",
-        "type": "action",
-        "label": "Escalate",
-        "dependencies": [
-          { "type": "enable", "expression": "escalationSelected & hasEscalationComment" }
-        ]
-      }
-    ]
-  };
+  /*const expr = expression('eq(a, b)', [ { 
+    name: 'eq', 
+    evaluate: (model, var_a, var_b) => {
+      return model[var_a] === model[var_b];
+    },
+  } ]);
+  console.log(expr({ a: 0 }));*/
 
+  console.log(expression('a & (b=="asdd" | hasChanged(c))'));
+  
   return (
     <>
       <div>

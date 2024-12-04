@@ -46,6 +46,7 @@ const tests: TestCase[] = [
 
     // checking if it exists in model and is not empty
     { expr: 'a="test" & b', model: { a: 'test', b: true }, res: true },
+    { expr: 'a="test" & b', model: { a: 'test', b: false }, res: false },
     { expr: 'a="test" & b', model: { a: 'test', b: 'test' }, res: true },
     { expr: 'a="test" & b', model: { a: 'test', b: 0 }, res: true },
     { expr: 'a="test" & b', model: { a: 'test', b: 2 }, res: true },
