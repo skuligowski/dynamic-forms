@@ -2,20 +2,14 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { expression } from './utils/expression';
+import { parse } from './utils/jsepexpression';
 
 function App() {
   const [count, setCount] = useState(0);
 
-  /*const expr = expression('eq(a, b)', [ { 
-    name: 'eq', 
-    evaluate: (model, var_a, var_b) => {
-      return model[var_a] === model[var_b];
-    },
-  } ]);
-  console.log(expr({ a: 0 }));*/
 
-  console.log(expression('a & (b=="asdd" | hasChanged(c))'));
+
+  console.log(parse('a=="12" && b')({a: true, b: 15}));
   
   return (
     <>
