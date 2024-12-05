@@ -14,6 +14,25 @@ interface TestGroup {
 }
 
 const tests: TestCase[] = [
+
+    //literals
+    { expr: 'true', model: {}, res: true },
+    { expr: 'false', model: {}, res: false },
+    { expr: 'false', model: { true: false}, res: false },
+    { expr: '14', model: {}, res: true },
+    { expr: 'null', model: {}, res: false },
+    { expr: '', model: {}, res: false },
+    { expr: '0', model: {}, res: false },
+
+    { expr: 'a', model: {a: 15}, res: true },
+    { expr: 'b', model: {}, res: false },
+    { expr: 'a', model: {a: '125'}, res: true },
+    { expr: 'a', model: {a: null}, res: false },
+    { expr: 'a', model: {a: false}, res: false },
+    { expr: 'a', model: {a: undefined}, res: false },
+    { expr: 'a', model: {a: 0}, res: false },
+    { expr: 'a', model: {a: ''}, res: false },
+
     { expr: 'a=="test"', model: { a: 'test' }, res: true },
     { expr: "a==\"test\"", model: { a: 'test' }, res: true },
     { expr: "a=='te\"st'", model: { a: 'te"st' }, res: true },
@@ -48,13 +67,23 @@ const tests: TestCase[] = [
     { expr: 'a=="test" & b', model: { a: 'test', b: true }, res: true },
     { expr: 'a=="test" & b', model: { a: 'test', b: false }, res: false },
     { expr: 'a=="test" & b', model: { a: 'test', b: 'test' }, res: true },
-    { expr: 'a=="test" & b', model: { a: 'test', b: 0 }, res: true },
     { expr: 'a=="test" & b', model: { a: 'test', b: 2 }, res: true },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: true }, res: false },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: false }, res: true },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: 'test' }, res: false },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: 2 }, res: false },
 
     // empty values
+    { expr: 'a=="test" & b', model: { a: 'test', b: 0 }, res: false },
     { expr: 'a=="test" & b', model: { a: 'test', b: '' }, res: false },
     { expr: 'a=="test" & b', model: { a: 'test', b: null }, res: false },
     { expr: 'a=="test" & b', model: { a: 'test', b: undefined }, res: false },
+    { expr: 'a=="test" & b', model: { a: 'test' }, res: false },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: 0 }, res: true },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: '' }, res: true },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: null }, res: true },
+    { expr: 'a=="test" & !b', model: { a: 'test', b: undefined }, res: true },
+    { expr: 'a=="test" & !b', model: { a: 'test' }, res: true },
     
     // with negations
     { expr: 'a!="test"', model: { a: 'test' }, res: false },

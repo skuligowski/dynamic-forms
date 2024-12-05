@@ -9,7 +9,7 @@ function App() {
 
 
 
-  console.log(parse('a=="12" && b')({a: true, b: 15}));
+  console.log(parse('a.b.c==a.d')({a: { b: {c: 12}, d: 13}}));
   
   return (
     <>
