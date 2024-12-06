@@ -119,6 +119,13 @@ const tests: TestCase[] = [
     { expr: '(a!="apple" & (b=="pear" | c!="grape"))', model: { a: 'apple', b: 'orange', c: 'grape' }, res: false },
     { expr: '(a=="apple" | (b=="pear" & c!="banana"))', model: { a: 'orange', b: 'pear', c: 'grape' }, res: true },
     { expr: '(a=="apple" | (b=="orange" & c!="grape"))', model: { a: 'apple', b: 'orange', c: 'grape' }, res: true },
+
+    { expr: 'a.b.c==12', model: {a: { b: { c: 12 } } }, res: true },
+    { expr: 'a.b.c==12 || a.d==13', model: {a: { b: { c: 13 }, d: 13 } }, res: true },
+    { expr: 'a.b.c==12 || a.d==13', model: {a: { b: { c: 13 }, d: 15 } }, res: false },
+    { expr: 'a.b.c', model: {a: { b: { c: 13 } } }, res: true },
+    { expr: 'a.b==12', model: {a: { b: 12 } }, res: true },
+    { expr: 'a["b"]==12', model: {a: { b: 12 } }, res: true }
 ];
 
 

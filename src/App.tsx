@@ -2,14 +2,33 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { parse } from './utils/jsepexpression';
 
 function App() {
   const [count, setCount] = useState(0);
 
+  const formMetadata = {
+    "components": [
+      {
+        "id": "isComment",
+        "type": "checkbox",
+        "label": "Yes, I want to comment",
+      },
+      {
+        "id": "isConfirm",
+        "type": "checkbox",
+        "label": "Yes, I confirm to write only the thuth",
+        "disabled": "!isComment"
+      },
+      {
+        "id": "comment",
+        "type": "textarea",
+        "label": "My comment",
+        "disabled": "!isComment || !isConfirm"
+      },
+    ]
+  };
 
-
-  console.log(parse('a.b.c==a.d')({a: { b: {c: 12}, d: 13}}));
+  console.log(formMetadata);
   
   return (
     <>

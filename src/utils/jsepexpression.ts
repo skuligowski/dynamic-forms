@@ -15,8 +15,8 @@ export declare type unaryCallback = (a: operand) => boolean;
 export declare type binaryCallback = (a: operand, b: operand) => boolean;
 export declare type Context = Record<string, unknown>;
 
-const logicalOperators: string[] = ['||', '&&', '|', '&'];
-const valueExpressionTypes: string[] = ['Identifier', 'Literal'];
+const logicalOperators: string[] = ['||', '&&', '|', '&', '!'];
+const valueExpressionTypes: string[] = ['Identifier', 'Literal', 'MemberExpression'];
 
 const binaryOperators: Record<string, binaryCallback> = {
     '||': function (a, b) { return a || b; },
@@ -40,29 +40,39 @@ function evaluate(jsepNode: jsep.Expression, context: Context): unknown {
 
     switch(node.type) {
         case 'BinaryExpression':
-            return evaluateBinary(jsepNode, context);
+            return evaluateBinary(jsepNode as jsep.BinaryExpression, context);
         case 'MemberExpression':
-            return evaluateMember(jsepNode, context);
+            return evaluateMember(jsepNode as jsep.MemberExpression, context);
         case 'Identifier':
-            return context[node.name];
+            return evaluateIdentifier(jsepNode as jsep.Identifier, context);
         case 'Literal':
-            return node.value;
+            return evaluateLiteral(jsepNode as jsep.Literal);
         case 'UnaryExpression':
-            return unaryOperators[node.operator](!!evaluate(node.argument, context));
+            return evaluateUnary(jsepNode as jsep.UnaryExpression, context);
+        default:
+            return undefined;
     }
 }
 
-function evaluateBinary(jsepNode: jsep.Expression, context: Context): boolean {
-    const node = jsepNode as jsep.BinaryExpression;
-    const isLogical = logicalOperators.includes(node.operator);
-    const leftEvaluated = normalize(evaluate(node.left, context), isLogical);
-    const rightEvaluated = normalize(evaluate(node.right, context), isLogical);
-    return binaryOperators[node.operator](leftEvaluated, rightEvaluated);
+function evaluateLiteral(node: jsep.Literal): unknown {
+    return node.value;
 }
 
-function evaluateMember(jsepNode: jsep.Expression, context: Context) {
-    const node = jsepNode as jsep.MemberExpression;
-    const object = evaluate(node.object, context) as {[key: string]: unknown};
+function evaluateIdentifier(node: jsep.Identifier, context: Context): unknown {
+    return context[node.name];
+}
+
+function evaluateBinary(node: jsep.BinaryExpression, context: Context): boolean {
+    const leftEvaluated = evaluate(node.left, context);
+    const rightEvaluated = evaluate(node.right, context);
+    const isLogical = logicalOperators.includes(node.operator);
+    return binaryOperators[node.operator](
+        isLogical ? !!leftEvaluated : leftEvaluated, 
+        isLogical ? !!rightEvaluated : rightEvaluated);
+}
+
+function evaluateMember(node: jsep.MemberExpression, context: Context): unknown {
+    const object = evaluate(node.object, context) as Context;
     let key: string;
     if (node.computed) {
       key = evaluate(node.property, context) as string;
@@ -73,10 +83,12 @@ function evaluateMember(jsepNode: jsep.Expression, context: Context) {
       throw Error(`Access to member "${key}" disallowed.`);
     }
     return object[key];
-  }
+}
 
-function normalize(value: unknown, isLogical: boolean): unknown {
-    return isLogical ? !!value : value;
+function evaluateUnary(node: jsep.UnaryExpression, context: Context): unknown {
+    const isLogical = logicalOperators.includes(node.operator);
+    const evaluated = evaluate(node.argument, context);
+    return unaryOperators[node.operator](isLogical ? !!evaluated : evaluated);
 }
 
 function parse(expression: string): EvaluationFunction {
