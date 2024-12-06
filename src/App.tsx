@@ -7,36 +7,29 @@ function App() {
   const [count, setCount] = useState(0);
 
   const formMetadata = {
-    "conditions": [
-      { "name": "escalationSelected", "type": "value", "component": "escalateCheckbox", "value": true },
-      { "name": "hasEscalationComment", "type": "notEmpty", "component": "escalationComment" },
-    ],
     "components": [
       {
-        "id": "escalateCheckbox",
+        "id": "isComment",
         "type": "checkbox",
-        "label": "Yes, I want to escalate",
-        "dependencies": []
+        "label": "Yes, I want to comment",
       },
       {
-        "id": "escalationComment",
+        "id": "isConfirm",
+        "type": "checkbox",
+        "label": "Yes, I confirm to write only the thuth",
+        "disabled": "!isComment"
+      },
+      {
+        "id": "comment",
         "type": "textarea",
-        "label": "Escalation comment",
-        "dependencies": [
-          { "type": "enable", "expression": "escalationSelected" }
-        ]
+        "label": "My comment",
+        "disabled": "!isComment || !isConfirm"
       },
-      {
-        "id": "escalateAction",
-        "type": "action",
-        "label": "Escalate",
-        "dependencies": [
-          { "type": "enable", "expression": "escalationSelected & hasEscalationComment" }
-        ]
-      }
     ]
   };
 
+  console.log(formMetadata);
+  
   return (
     <>
       <div>
