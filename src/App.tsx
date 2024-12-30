@@ -1,42 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
+import { useState } from 'react';
 
 function App() {
   const [count, setCount] = useState(0);
 
   const formMetadata = {
-    "components": [
+    components: [
       {
-        "id": "isComment",
-        "type": "checkbox",
-        "label": "Yes, I want to comment",
+        id: 'isComment',
+        type: 'checkbox',
+        label: 'Yes, I want to comment',
       },
       {
-        "id": "isConfirm",
-        "type": "checkbox",
-        "label": "Yes, I confirm to write only the thuth",
-        "disabled": "!isComment"
+        id: 'isConfirm',
+        type: 'checkbox',
+        label: 'Yes, I confirm to write only the thuth',
+        disabled: '!isComment',
       },
       {
-        "id": "comment",
-        "type": "textarea",
-        "label": "My comment",
-        "disabled": "!isComment || !isConfirm"
+        id: 'comment',
+        type: 'textarea',
+        label: 'My comment',
+        disabled: '!isComment || !isConfirm',
       },
-    ]
+    ],
   };
 
   console.log(formMetadata);
-  
+
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
+        <a href="https://vite.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://react.dev" target="_blank" rel="noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
@@ -53,7 +53,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
